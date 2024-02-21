@@ -55,9 +55,9 @@ class HomeViewController: UIViewController {
         APICaller.shared.getTrendingMovies { [weak self] result in
             switch result {
             case .success(let titles):
-                let selectedTitle = titles.randomElement()
+                guard let selectedTitle = titles.randomElement() else {return}
                 //self?.randomTrendingMovie = selectedTitle
-                self?.heroHeaderView?.configure(with: TitleViewModel(titleName: selectedTitle?.original_title ?? "sss", posterURL: (selectedTitle?.poster_path)!))
+                self?.heroHeaderView?.configure(with: TitleViewModel(titleName: selectedTitle.original_title!, posterURL: selectedTitle.poster_path!))
             case .failure(let error):
                 print(String(describing: error))
             }

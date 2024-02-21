@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 class HeroHeaderUIView: UIView {
     
@@ -34,6 +35,7 @@ class HeroHeaderUIView: UIView {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
+        imageView.image = UIImage(named: "heroPoster")
         return imageView
     }()
 
@@ -46,12 +48,7 @@ class HeroHeaderUIView: UIView {
         addConstraints()
     }
     
-    required init?(coder: NSCoder) {
-        fatalError()
-    }
-    
-   
-    
+ 
     private func addGradient() {
         let gradientLayer = CAGradientLayer()
         gradientLayer.colors = [
@@ -79,16 +76,19 @@ class HeroHeaderUIView: UIView {
         NSLayoutConstraint.activate(downloadButtonConstraints)
     }
     
+    public func configure(with model: TitleViewModel) {
+        guard let url = URL(string: "https://image.tmdb.org/t/p/w500\(model.posterURL)") else {return}
+        heroImageView.sd_setImage(with: url, completed: nil)
+    }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         heroImageView.frame = bounds
     }
     
-    public func configure(with model: TitleViewModel) {
-        print("aa")
-        guard let url = URL(string: "https://image.tmdb.org/t/p/w500/\(model.posterURL)") else {return}
-     
-        heroImageView.sd_setImage(with: url, completed: nil)
+    required init?(coder: NSCoder) {
+        fatalError()
     }
+    
 
 }

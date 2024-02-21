@@ -51,6 +51,19 @@ class CollectionViewTableViewCell: UITableViewCell {
             self?.collectionView.reloadData()
         }
     }
+    
+    private func downloadTitleAt(indexPath: IndexPath) {
+        
+        
+        DataPersistenceManager.shared.downloadTitleWith(model: titles[indexPath.row]) { result in
+            switch result {
+            case .success(let success):
+                NotificationCenter.default.post(name: NSNotification.Name("downloaded"), object: nil)
+            case .failure(let error):
+                print(String(describing: error))
+            }
+        }
+    }
 }
 
 extension CollectionViewTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
@@ -76,8 +89,7 @@ extension CollectionViewTableViewCell: UICollectionViewDelegate, UICollectionVie
         APICaller.shared.getMovie(with: titleName + " trailer") { [weak self] result in
             switch result {
             case .success(let movie):
-                let title = self?.titles[indexPath.row]
-                guard let titleOverview = title?.overview else {return}
+                guard let titleOverview = title.overview else {return}
                 guard let strongSelf = self else{return}
                 let viewModel = TitlePreviewViewModel(title: titleName, youtubeView: movie, titleOverview: titleOverview)
                 self?.delegate?.collectionViewTableViewCell(strongSelf, viewModel: viewModel)
@@ -85,5 +97,17 @@ extension CollectionViewTableViewCell: UICollectionViewDelegate, UICollectionVie
                 print(String(describing: error))
             }
         }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        let config = UIContextMenuConfiguration(
+            identifier: nil,
+            previewProvider: nil) {[weak self] _ in
+                let downloadAction = UIAction(title: "Download") { _ in
+                    self?.downloadTitleAt(indexPath: indexPath)
+                }
+                return UIMenu(children: [downloadAction])
+            }
+        return config
     }
 }
