@@ -53,12 +53,10 @@ class CollectionViewTableViewCell: UITableViewCell {
     }
     
     private func downloadTitleAt(indexPath: IndexPath) {
-        
-        
         DataPersistenceManager.shared.downloadTitleWith(model: titles[indexPath.row]) { result in
             switch result {
-            case .success(let success):
-                NotificationCenter.default.post(name: NSNotification.Name("downloaded"), object: nil)
+            case .success():
+                NotificationCenter.default.post(name: NSNotification.Name("download"), object: nil)
             case .failure(let error):
                 print(String(describing: error))
             }
