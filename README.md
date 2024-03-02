@@ -19,6 +19,7 @@ Full featured universal (iOS, macOS, iPadOS) app.
 - Auto layout Based
 - Universal App: Run on iPhone, iPad, and Mac
 - Built in Xcode 15
+- [Leverages free TMDB API](https://developer.themoviedb.org/reference/intro/getting-started)
 
 ## Design
 
